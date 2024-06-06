@@ -89,6 +89,7 @@ const ProductsContainer = styled.div`
 `;
 
 const StyledProductCard = styled(ProductCard)`
-  flex: 1 1 250px;
-  max-width: 300px;
+  flex: 1 1 calc(20% - 1rem); /* Ajuste para 5 colunas */
+  max-width: calc(20% - 1rem); /* Ajuste para 5 colunas */
+  box-sizing: border-box;
 `;
