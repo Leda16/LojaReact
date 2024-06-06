@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
-const ProductList = ({ rows }) => {
+const ProductList = () => {
+  const [rows, setRows] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoriesRes = await axios.get(`${process.env.API_URL}/api/user/categories`);
+        const productsRes = await axios.get(`${process.env.API_URL}/api/user/products`);
+        const categories = categoriesRes.data;
+        const products = productsRes.data;
+
+        const formattedRows = categories.map(category => {
+          const categoryProducts = products.filter(product => product.category === category.name);
+          return {
+            title: category.name,
+            icon: category.icon, // Use the icon from the category
+            category: category.name,
+            products: categoryProducts
+          };
+        });
+
+        setRows(formattedRows);
+      } catch (err) {
+        console.error('Erro ao buscar dados:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleShowMore = (category) => {
     router.push(`/category/${category}`);
@@ -28,7 +57,7 @@ const ProductList = ({ rows }) => {
                   <ProductImage src={product.image} alt={product.name} />
                   <ProductDetails>
                     <ProductName>{product.name}</ProductName>
-                    <ProductPrice>{product.price}</ProductPrice>
+                    <ProductPrice>R$ {product.price}</ProductPrice>
                   </ProductDetails>
                 </ProductCard>
               ))}

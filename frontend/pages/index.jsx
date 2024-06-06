@@ -3,7 +3,6 @@ import Navbar from '../components/Navbar/Navbar';
 import HeroSection from '../components/HeroSection/HeroSection';
 import BenefitsSection from '../components/BenefitsSection/BenefitsSection';
 import ProductList from '../components/ProductList/ProductList';
-import { productRows } from '../data/products';
 import Footer from '../components/Footer/Footer';
 
 const Home = () => {
@@ -12,7 +11,7 @@ const Home = () => {
       <Navbar />
       <HeroSection />
       <BenefitsSection />
-      <ProductList rows={productRows} />
+      <ProductList />
       <Footer />
     </div>
   );

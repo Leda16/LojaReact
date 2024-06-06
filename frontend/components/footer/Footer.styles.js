@@ -79,4 +79,11 @@ export const FooterBottomText = styled.p`
   color: #666;
 `;
 
+export const PaymentMethods = styled.div`
+  display: flex;
+  gap: 1rem;
 
+  img {
+    height: 48px;
+  }
+`;

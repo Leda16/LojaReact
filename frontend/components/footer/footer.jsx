@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import { 
   FooterContainer, 
   FooterContent, 
@@ -9,10 +11,46 @@ import {
   FooterInput, 
   FooterButton, 
   FooterBottom, 
-  FooterBottomText
+  FooterBottomText, 
+  PaymentMethods 
 } from './Footer.styles';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [csrfToken, setCsrfToken] = useState('');
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const res = await axios.get(`${process.env.API_URL}/api/csrf-token`, { withCredentials: true });
+        setCsrfToken(res.data.csrfToken);
+      } catch (err) {
+        console.error('Erro ao buscar CSRF token:', err);
+      }
+    };
+
+    fetchCsrfToken();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        `${process.env.API_URL}/api/newsletter`, 
+        { email }, 
+        {
+          headers: {
+            'csrf-token': csrfToken
+          },
+          withCredentials: true
+        }
+      );
+      toast.success(res.data.msg);
+    } catch (err) {
+      toast.error('Erro ao registrar email. Tente novamente.');
+    }
+  };
+
   return (
     <FooterContainer>
       <FooterContent>
@@ -33,18 +71,33 @@ const Footer = () => {
         </FooterSection>
         <FooterSection>
           <FooterTitle>ATENDIMENTO AO CLIENTE</FooterTitle>
-          <FooterLink href="mailto:suporte@cliquebom.com">E-mail: suporte@cliquebom.com</FooterLink>
-          <FooterLink href="tel:+5592992967444">WhatsApp: (092) 99296-7444 / (046) 99105-5481</FooterLink>
+          <FooterLink>Email: suporte@techstore.com</FooterLink>
+          <FooterLink>WhatsApp: (11) 99922-1100</FooterLink>
         </FooterSection>
         <FooterSection>
-          <FooterTitle>NEWSLETTER</FooterTitle>
-          <FooterText>Assine nossa newsletter e receba as melhores ofertas DE GRAÇA!</FooterText>
-          <FooterInput type="email" placeholder="Seu e-mail" />
-          <FooterButton>Enviar</FooterButton>
+          <FooterTitle>NOTÍCIAS</FooterTitle>
+          <FooterText>Assine nossas notícias e receba as melhores ofertas DE GRAÇA!</FooterText>
+          <form onSubmit={handleSubmit}>
+            <FooterInput 
+              type="email" 
+              placeholder="Seu e-mail" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+            />
+            <FooterButton type="submit">Enviar</FooterButton>
+          </form>
         </FooterSection>
       </FooterContent>
       <FooterBottom>
         <FooterBottomText>© TechStore - Com tecnologia própria</FooterBottomText>
+        <PaymentMethods>
+          <img src="/images/visa.svg" alt="Visa" />
+          <img src="/images/mastercard.svg" alt="Mastercard" />
+          <img src="/images/amex.svg" alt="Amex" />
+          <img src="/images/paypal.svg" alt="PayPal" />
+          <img src="/images/pix.svg" alt="Pix" />
+        </PaymentMethods>
       </FooterBottom>
     </FooterContainer>
   );
