@@ -75,6 +75,7 @@ export const Button = styled.button`
   &:hover {
     background-color: #218838;
   }
+  margin-top: 10px;
 `;
 
 export const Title = styled.h1`

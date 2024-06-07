@@ -7,7 +7,7 @@ const csrfProtection = csrf({ cookie: true });
 router.use(csrfProtection);
 
 router.post('/', async (req, res) => {
-  const { name, category, image, info, rating, price, stock } = req.body;
+  const { name, category, image, info, rating, price, stock, imageExtra } = req.body;
 
   try {
     const newProduct = new Product({
@@ -18,6 +18,7 @@ router.post('/', async (req, res) => {
       rating,
       price,
       stock,
+      imageExtra, 
     });
 
     await newProduct.save();
@@ -27,7 +28,6 @@ router.post('/', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Erro ao criar produto.' });
     console.error('Erro ao criar produto:', err);
-
   }
 });
 

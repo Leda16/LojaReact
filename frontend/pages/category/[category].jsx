@@ -67,7 +67,6 @@ const CategoryPageContainer = styled.div`
   flex-direction: column;
   gap: 2rem;
   margin: 2rem auto;
-  padding: 0 2rem;
   max-width: 1200px;
 `;
 

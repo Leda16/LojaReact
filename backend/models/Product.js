@@ -8,6 +8,7 @@ const ProductSchema = new mongoose.Schema({
   rating: { type: Number, required: true },
   price: { type: Number, required: true },
   stock: { type: Number, required: true },
+  imageExtra: { type: String },
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

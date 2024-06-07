@@ -32,6 +32,7 @@ const CreateProduct = () => {
     rating: '',
     price: '',
     stock: '',
+    imageExtra: Array(8).fill(''), // Field for extra images
   });
   const [categories, setCategories] = useState([]);
   const [csrfToken, setCsrfToken] = useState('');
@@ -70,7 +71,15 @@ const CreateProduct = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'price') {
+    if (name.startsWith('imageExtra')) {
+      const index = parseInt(name.split('-')[1], 10);
+      const newImageExtra = [...product.imageExtra];
+      newImageExtra[index] = value;
+      setProduct({
+        ...product,
+        imageExtra: newImageExtra,
+      });
+    } else if (name === 'price') {
       setProduct({
         ...product,
         [name]: formatPrice(value),
@@ -87,10 +96,12 @@ const CreateProduct = () => {
     e.preventDefault();
 
     const formattedPrice = parseFloat(product.price.replace('.', '').replace(',', '.'));
+    const imageExtra = product.imageExtra.filter(Boolean).join(';');
 
     const productToSubmit = {
       ...product,
       price: formattedPrice,
+      imageExtra,
     };
 
     try {
@@ -114,6 +125,7 @@ const CreateProduct = () => {
         rating: '',
         price: '',
         stock: '',
+        imageExtra: Array(8).fill(''), // Reset extra images
       });
     } catch (err) {
       console.error('Erro ao criar produto:', err);
@@ -217,6 +229,24 @@ const CreateProduct = () => {
             <Input type="number" name="stock" value={product.stock} onChange={handleChange} required />
           </FormGroup>
         </FormRow>
+        <FormGroup>
+          <Label>
+            <IconWrapper>
+              <FaImage />
+            </IconWrapper>
+            Links para imagens extras
+          </Label>
+          {product.imageExtra.map((image, index) => (
+            <Input
+              key={index}
+              type="text"
+              name={`imageExtra-${index}`}
+              value={image}
+              onChange={handleChange}
+              placeholder={`Imagem ${index + 1}`}
+            />
+          ))}
+        </FormGroup>
         <Button type="submit">Criar Produto</Button>
       </form>
     </FormContainer>

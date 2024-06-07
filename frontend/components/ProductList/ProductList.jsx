@@ -19,7 +19,7 @@ const ProductList = () => {
           const categoryProducts = products.filter(product => product.category === category.name);
           return {
             title: category.name,
-            icon: category.icon, // Use the icon from the category
+            icon: category.icon,
             category: category.name,
             products: categoryProducts
           };
@@ -53,11 +53,17 @@ const ProductList = () => {
             </RowHeader>
             <ProductsContainer>
               {row.products.map((product, productIndex) => (
-                <ProductCard key={productIndex}>
+                <ProductCard key={productIndex} onClick={() => router.push(`/product/${product._id}`)}>
                   <ProductImage src={product.image} alt={product.name} />
                   <ProductDetails>
                     <ProductName>{product.name}</ProductName>
                     <ProductPrice>R$ {product.price}</ProductPrice>
+                    <ProductInstallment>
+                      ou <strong>12x</strong> de <strong>R$ {(product.price / 12).toFixed(2)}</strong>
+                    </ProductInstallment>
+                    <ProductAvailability available={product.stock > 0}>
+                      <span className="dot" /> Disponível
+                    </ProductAvailability>
                   </ProductDetails>
                 </ProductCard>
               ))}
@@ -118,14 +124,21 @@ const ProductsContainer = styled.div`
   display: flex;
   gap: 1rem;
   overflow-x: auto;
+  padding: 14px;
 `;
 
 const ProductCard = styled.div`
-  flex: 0 0 200px;
+  flex: 0 0 220px; /* Increased the width */
   background-color: #f9f9f9;
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05); /* Slightly increased scale */
+  }
 `;
 
 const ProductImage = styled.img`
@@ -150,4 +163,24 @@ const ProductPrice = styled.span`
   font-size: 1.2rem;
   color: #2c7a7b;
   font-weight: bold;
+`;
+
+const ProductInstallment = styled.span`
+  font-size: 0.9rem;
+  color: #333;
+`;
+
+const ProductAvailability = styled.span`
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: ${props => (props.available ? '#28a745' : '#dc3545')};
+
+  .dot {
+    height: 8px;
+    width: 8px;
+    background-color: ${props => (props.available ? '#28a745' : '#dc3545')};
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+  }
 `;
