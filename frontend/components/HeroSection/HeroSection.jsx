@@ -1,6 +1,5 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { HeroContainer, Slide, SlideImage } from './HeroSection.styles';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
@@ -18,19 +17,19 @@ const HeroSection = () => {
   };
 
   return (
-    <HeroContainer>
+    <div className="w-full max-w-screen-xl mx-auto p-4">
       <Slider {...settings}>
-        <Slide>
-          <SlideImage src="/images/banner1.jpg" alt="Banner 1" />
-        </Slide>
-        <Slide>
-          <SlideImage src="/images/banner2.jpg" alt="Banner 2" />
-        </Slide>
-        <Slide>
-          <SlideImage src="/images/banner3.jpg" alt="Banner 3" />
-        </Slide>
+        <div className="relative">
+          <img src="/images/banner1.jpg" alt="Banner 1" className="w-full h-auto rounded-lg" />
+        </div>
+        <div className="relative">
+          <img src="/images/banner2.jpg" alt="Banner 2" className="w-full h-auto rounded-lg" />
+        </div>
+        <div className="relative">
+          <img src="/images/banner3.jpg" alt="Banner 3" className="w-full h-auto rounded-lg" />
+        </div>
       </Slider>
-    </HeroContainer>
+    </div>
   );
 };
 
