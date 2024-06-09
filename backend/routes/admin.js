@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../controllers/authController');
-const auth = require('../middleware/auth');
+const { adminLogin } = require('../controllers/authController');
+const { adminAuth } = require('../middleware/auth');
 
-router.post('/register', register);
-router.post('/login', login);
+router.post('/login', adminLogin);
 
-router.use(auth);
+router.use(adminAuth);
 
 router.get('/protected', (req, res) => {
   res.json({ msg: 'Você tem acesso a esta rota protegida' });

@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const csurf = require('csurf');
 const connectDB = require('./db');
 const cors = require('cors');
-
+const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
@@ -25,15 +25,22 @@ const corsOptions = {
   credentials: true,
 };
 
-
 app.use(cors(corsOptions));
 
 app.use(csrfProtection);
 
 app.use((req, res, next) => {
   res.cookie('XSRF-TOKEN', req.csrfToken());
+  console.log('CSRF Token:', req.csrfToken());
   next();
 });
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Ajustar para 'true' em produção com HTTPS
+}));
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -46,37 +53,21 @@ const adminRoute = require('./routes/admin');
 const newsletterRoutes = require('./routes/newsletterRoutes');
 const productsRoute = require('./routes/products');
 const categoriesRoute = require('./routes/categories');
+const authClient = require('./routes/auth');
+const cartRoute = require('./routes/cart');
 
 app.use('/api/newsletter', newsletterRoute);
 app.use('/api/newsletterRoutes', newsletterRoutes);
 app.use('/api/admin', loginLimiter, adminRoute);
 app.use('/api/products', productsRoute);
 app.use('/api/categories', categoriesRoute);
+app.use('/api/auth', authClient);
+app.use('/api/cart', cartRoute);
 app.use('/api/user/categories', require('./routes/userCategories'));
 app.use('/api/user/products', require('./routes/userProducts'));
 
 app.get('/api/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
-});
-
-app.post('/api/admin/login', async (req, res) => {
-  const { username, password } = req.body;
-
-  const user = await User.findOne({ username });
-
-  if (!user) {
-    return res.status(401).json({ message: 'Credenciais inválidas' });
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    return res.status(401).json({ message: 'Credenciais inválidas' });
-  }
-
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-  res.json({ token });
 });
 
 const PORT = process.env.PORT || 5000;

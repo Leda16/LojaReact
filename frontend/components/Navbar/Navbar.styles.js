@@ -138,6 +138,12 @@ export const AuthContainer = styled.div`
       color: #0056b3;
     }
   }
+
+  &:hover {
+    color: #0056b3;
+  }
+  cursor: pointer;
+
 `;
 
 export const CartContainer = styled.div`
@@ -178,9 +184,11 @@ export const MobileMenu = styled.div`
   @media (max-width: 768px) {
     display: ${({ open }) => (open ? 'flex' : 'none')};
   }
-
+  svg {
+    color: #007bff;
+  }
   a {
-    color: #333;
+    color: #007bff;
     text-decoration: none;
     font-size: 1rem;
 

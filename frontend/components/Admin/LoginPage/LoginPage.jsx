@@ -42,7 +42,7 @@ const LoginPage = () => {
           withCredentials: true, 
         }
       );
-      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('Admintoken', res.data.token);
       toast.success('Login realizado com sucesso!');
       router.push('/admin');
     } catch (err) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { decodeToken } from '../utils/decodeToken';
 
 const withAuth = (WrappedComponent) => {
   return (props) => {
@@ -7,11 +8,16 @@ const withAuth = (WrappedComponent) => {
     const router = useRouter();
 
     useEffect(() => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('Admintoken');
       if (!token) {
         router.push('/admin/login');
       } else {
-        setIsAuthenticated(true);
+        const decodedToken = decodeToken(token);
+        if (decodedToken && decodedToken.role === 'admin') {
+          setIsAuthenticated(true);
+        } else {
+          router.push('/admin/login');
+        }
       }
     }, [router]);
 

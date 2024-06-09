@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 import { FaSearch, FaUser, FaShoppingCart, FaBars, FaTimes, FaTruck, FaExchangeAlt, FaHeart, FaCaretDown } from 'react-icons/fa';
 import { 
   NavbarContainer, 
@@ -18,10 +19,26 @@ import {
   TopBarItem,
   CenterMenu 
 } from './Navbar.styles';
+import AuthModal from './AuthModal';
 
 const Navbar = () => {
+  const [categories, setCategories] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${process.env.API_URL}/api/categories`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleMouseEnter = () => {
     setShowDropdown(true);
@@ -33,6 +50,14 @@ const Navbar = () => {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
   };
 
   return (
@@ -57,27 +82,11 @@ const Navbar = () => {
             <span>Catálogo <FaCaretDown /></span>
             {showDropdown && (
               <DropdownMenu>
-                <DropdownItem>
-                  <Link href="/category/kids">Crianças</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/adults">Adultos</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/teens">+15</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/home">Casa</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/electronics">Eletrônicos</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/tools">Ferramentas</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/pets">Animais</Link>
-                </DropdownItem>
+                {categories.map((category) => (
+                  <DropdownItem key={category._id}>
+                    <Link href={`/category/${category.name}`}>{category.name}</Link>
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             )}
           </NavbarItem>
@@ -93,27 +102,11 @@ const Navbar = () => {
             <span>Catálogo <FaCaretDown /></span>
             {showDropdown && (
               <DropdownMenu>
-                <DropdownItem>
-                  <Link href="/category/kids">Crianças</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/adults">Adultos</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/teens">+15</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/home">Casa</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/electronics">Eletrônicos</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/tools">Ferramentas</Link>
-                </DropdownItem>
-                <DropdownItem>
-                  <Link href="/category/pets">Animais</Link>
-                </DropdownItem>
+                {categories.map((category) => (
+                  <DropdownItem key={category._id}>
+                    <Link href={`/category/${category.name}`}>{category.name}</Link>
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             )}
           </NavbarItem>
@@ -128,22 +121,22 @@ const Navbar = () => {
           </NavbarItem>
         </CenterMenu>
         <NavbarMenu>
-          <SearchBar>
-            <input type="text" placeholder="Buscar produtos..." />
-            <FaSearch />
-          </SearchBar>
-          <AuthContainer>
-            <Link href="/login">
-              <FaUser />
-            </Link>
-          </AuthContainer>
-          <CartContainer>
+        <CartContainer>
             <Link href="/cart">
               <FaShoppingCart />
             </Link>
           </CartContainer>
+          <SearchBar>
+            <input type="text" placeholder="Buscar produtos..." />
+            <FaSearch />
+          </SearchBar>
+          <AuthContainer onClick={openModal}>
+            <p>Entre ou <br /> cadastrar-se</p>
+          </AuthContainer>
+
         </NavbarMenu>
       </NavbarContainer>
+      <AuthModal isOpen={modalIsOpen} onRequestClose={closeModal} />
     </>
   );
 };
