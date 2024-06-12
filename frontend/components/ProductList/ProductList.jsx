@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
@@ -39,148 +38,41 @@ const ProductList = () => {
   };
 
   return (
-    <ProductListContainer>
+    <div className="flex flex-col gap-8 my-8 px-8">
       {rows && rows.length > 0 ? (
         rows.map((row, rowIndex) => (
-          <Row key={rowIndex}>
-            <RowHeader>
-              <RowTitle>
+          <div key={rowIndex} className="flex flex-col gap-4 p-4 bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl text-gray-800 flex items-center gap-2">
                 {row.title} <span>{row.icon}</span>
-              </RowTitle>
-              <ShowMoreButton onClick={() => handleShowMore(row.category)}>
+              </h2>
+              <button className="text-teal-700 text-sm underline" onClick={() => handleShowMore(row.category)}>
                 Mostrar mais
-              </ShowMoreButton>
-            </RowHeader>
-            <ProductsContainer>
+              </button>
+            </div>
+            <div className="flex gap-4 overflow-x-auto">
               {row.products.map((product, productIndex) => (
-                <ProductCard key={productIndex} onClick={() => router.push(`/product/${product._id}`)}>
-                  <ProductImage src={product.image} alt={product.name} />
-                  <ProductDetails>
-                    <ProductName>{product.name}</ProductName>
-                    <ProductPrice>R$ {product.price}</ProductPrice>
-                    <ProductInstallment>
-                      ou <strong>12x</strong> de <strong>R$ {(product.price / 12).toFixed(2)}</strong>
-                    </ProductInstallment>
-                    <ProductAvailability available={product.stock > 0}>
-                      <span className="dot" /> Disponível
-                    </ProductAvailability>
-                  </ProductDetails>
-                </ProductCard>
+                <div key={productIndex} className="flex-none w-56 bg-gray-100 p-4 rounded-lg shadow-lg cursor-pointer transform transition-transform hover:scale-105" onClick={() => router.push(`/product/${product._id}`)}>
+                  <img src={product.image} alt={product.name} className="w-full h-auto rounded-lg" />
+                  <div className="flex flex-col gap-2 mt-4">
+                    <span className="text-lg text-gray-800">{product.name}</span>
+                    <span className="text-xl text-teal-700 font-bold">R$ {product.price}</span>
+                    <span className="text-sm text-gray-700">ou <strong>12x</strong> de <strong>R$ {(product.price / 12).toFixed(2)}</strong></span>
+                    <span className="text-sm font-bold text-green-600 flex items-center">
+                      <span className={`inline-block w-2 h-2 rounded-full mr-2 ${product.stock > 0 ? 'bg-green-600' : 'bg-red-600'}`}></span>
+                      Disponível
+                    </span>
+                  </div>
+                </div>
               ))}
-            </ProductsContainer>
-          </Row>
+            </div>
+          </div>
         ))
       ) : (
         <p>No products available</p>
       )}
-    </ProductListContainer>
+    </div>
   );
 };
 
 export default ProductList;
-
-const ProductListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin: 2rem 0;
-  padding: 0 2rem;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 10px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const RowHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const RowTitle = styled.h2`
-  font-size: 1.5rem;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const ShowMoreButton = styled.button`
-  background: none;
-  border: none;
-  color: #2c7a7b;
-  font-size: 1rem;
-  cursor: pointer;
-  text-decoration: underline;
-`;
-
-const ProductsContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 14px;
-`;
-
-const ProductCard = styled.div`
-  flex: 0 0 220px; /* Increased the width */
-  background-color: #f9f9f9;
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.05); /* Slightly increased scale */
-  }
-`;
-
-const ProductImage = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-`;
-
-const ProductDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-`;
-
-const ProductName = styled.span`
-  font-size: 1rem;
-  color: #333;
-`;
-
-const ProductPrice = styled.span`
-  font-size: 1.2rem;
-  color: #2c7a7b;
-  font-weight: bold;
-`;
-
-const ProductInstallment = styled.span`
-  font-size: 0.9rem;
-  color: #333;
-`;
-
-const ProductAvailability = styled.span`
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: ${props => (props.available ? '#28a745' : '#dc3545')};
-
-  .dot {
-    height: 8px;
-    width: 8px;
-    background-color: ${props => (props.available ? '#28a745' : '#dc3545')};
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-  }
-`;

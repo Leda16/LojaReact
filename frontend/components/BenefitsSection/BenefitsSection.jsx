@@ -1,5 +1,4 @@
 import React from 'react';
-import { BenefitsContainer, BenefitItem, BenefitIcon, BenefitTitle, BenefitDescription } from './BenefitsSection.styles';
 import { FaLock, FaTruck, FaHeadset, FaUndo } from 'react-icons/fa';
 
 const benefits = [
@@ -27,15 +26,15 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <BenefitsContainer>
+    <div className="flex justify-around items-center py-8 bg-gray-100 border-t-4 border-b-4 border-blue-500">
       {benefits.map((benefit, index) => (
-        <BenefitItem key={index}>
-          <BenefitIcon>{benefit.icon}</BenefitIcon>
-          <BenefitTitle>{benefit.title}</BenefitTitle>
-          <BenefitDescription>{benefit.description}</BenefitDescription>
-        </BenefitItem>
+        <div key={index} className="flex flex-col items-center text-center max-w-xs">
+          <div className="mb-4">{benefit.icon}</div>
+          <h3 className="text-xl text-blue-500 mb-2">{benefit.title}</h3>
+          <p className="text-gray-600">{benefit.description}</p>
+        </div>
       ))}
-    </BenefitsContainer>
+    </div>
   );
 };
 

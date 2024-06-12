@@ -21,7 +21,7 @@ app.use(cookieParser());
 const csrfProtection = csurf({ cookie: true });
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'http://201.1.119.113:8221',
   credentials: true,
 };
 

@@ -7,7 +7,7 @@ import Footer from '../components/Footer/Footer';
 
 const Home = () => {
   return (
-    <div style={{ backgroundColor: '#f9f9f9' }}>
+    <div className="bg-gray-100">
       <Navbar />
       <HeroSection />
       <BenefitsSection />

@@ -32,7 +32,7 @@ const Navbar = () => {
   const handleMouseLeave = () => {
     timeoutId = setTimeout(() => {
       setShowDropdown(false);
-    }, 300); // 300ms delay before hiding the dropdown
+    }, 300);
   };
 
   const toggleMobileMenu = () => {
@@ -60,20 +60,20 @@ const Navbar = () => {
           <FaHeart className="mr-2" /> Satisfação Garantida ou Dinheiro de Volta
         </div>
       </div>
-      <nav className="flex justify-between items-center p-4 bg-white text-gray-800 shadow-md relative z-20">
+      <nav className="flex justify-between items-center p-4 bg-white text-gray-800 shadow-md relative">
         <div className="text-2xl font-bold text-purple-700">
           <Link href="/">TechStore Luiza</Link>
         </div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
           {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </div>
-        <div className={`flex-col md:flex-row md:flex ${mobileMenuOpen ? 'flex' : 'hidden'} absolute md:relative top-16 left-0 right-0 md:top-auto bg-white md:bg-transparent md:space-x-6`}>
-          <div className="relative md:static" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div className={`md:flex items-center space-x-4 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
+          <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <div className="flex items-center cursor-pointer py-2 md:py-0">
               <span>Catálogo</span> <FaCaretDown className="ml-1" />
             </div>
             {showDropdown && (
-              <div className="absolute bg-white border mt-1 z-20 shadow-lg md:shadow-none w-full md:w-auto">
+              <div className="absolute bg-white border mt-1 z-10 shadow-lg w-full md:w-auto">
                 {categories.map((category) => (
                   <div key={category._id} className="px-4 py-2 hover:bg-gray-100">
                     <Link href={`/category/${category.name}`}>{category.name}</Link>
